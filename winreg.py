@@ -1,5 +1,21 @@
 from winreg import *
 
+def Windows_User_Id():
+	cut = 0
+	User_Num = 0
+	try :
+		while True:
+			EnumKey(HKEY_USERS, cut)
+			cut += 1
+	except WindowsError:
+		User_Num += cut-3
+		return User_Num
+
+def Windows_User_Id_Set():
+	Set = Windows_User_Id()
+	result = EnumKey(HKEY_USERS, Set)
+	return result
+
 def Windows_info():
     Wininfo_Key = OpenKey(HKEY_LOCAL_MACHINE,r"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")
     print ('OS_Name : ' + QueryValueEx(Wininfo_Key, 'ProductName')[0])
@@ -121,3 +137,50 @@ def Public_Directory():
 			cut += 1
 	except WindowsError:
 		pass
+
+def Recent_Run():
+	Sub_Key = Windows_User_Id_Set()
+	Sub_Key += "\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU"
+	Run_Key = OpenKey(HKEY_USERS, Sub_Key)
+	try:
+		cut = 0
+		while True:
+			name, value, type = EnumValue(Run_Key, cut)
+			if(name == 'MRUList'):
+				pass
+			else:
+				print(name + ": " + value)
+			cut += 1
+	except WindowsError:
+		pass
+
+def Internet_Explorer_Config():
+	Sub_Key = Windows_User_Id_Set()
+	Sub_Key += "\\Software\\Microsoft\\Internet Explorer\\Main"
+	IEC_Key = OpenKey(HKEY_USERS, Sub_Key)
+	try:
+		cut = 0
+		while True:
+			name, value, type = EnumValue(IEC_Key, cut)
+			print(name + ": " + str (value))
+			cut += 1
+	except WindowsError:
+		pass
+
+def Internet_Explorer_Search_Log():
+	Sub_Key = Windows_User_Id_Set()
+	Sub_Key += "\\Software\\Microsoft\\Internet Explorer\\TypedURLs"
+	IESL_Key = OpenKey(HKEY_USERS,Sub_Key)
+	try:
+		cut = 0
+		while True:
+			name, value, type = EnumValue(IESL_Key, cut)
+			print(name + ": " + value)
+			cut += 1
+	except WindowsError:
+		pass
+
+def Recent_Dialog():
+	a = 'S-1-5-21-885400413-3935149914-2550887433-1001\\Software\\Microsoft\\Windows\\CurrentVersion\Explorer\\ComDlg32\\LastVisitedPidlMRU'
+	Dialog_Key = OpenKey(HKEY_USERS,a)
+	print(EnumValue(Dialog_Key,0))
