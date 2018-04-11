@@ -1,3 +1,5 @@
+import os
+import sys
 from winreg import *
 
 def Windows_User_Id():
@@ -181,6 +183,46 @@ def Internet_Explorer_Search_Log():
 		pass
 
 def Recent_Dialog():
-	a = 'S-1-5-21-885400413-3935149914-2550887433-1001\\Software\\Microsoft\\Windows\\CurrentVersion\Explorer\\ComDlg32\\LastVisitedPidlMRU'
-	Dialog_Key = OpenKey(HKEY_USERS,a)
-	print(EnumValue(Dialog_Key,0))
+	Sub_Key = Windows_User_Id_Set()
+	Sub_Key += "\\Software\\Microsoft\\Windows\\CurrentVersion\Explorer\\ComDlg32\\LastVisitedPidlMRU"
+	Dialog_Key = OpenKey(HKEY_USERS, Sub_Key)
+	try:
+		cut = 0
+		while True:
+			name, value, type = EnumValue(Dialog_Key, cut)
+			print(name + ": " + str(value))
+			cut += 1
+	except WindowsError:
+		pass
+
+while(1):
+	tmp = input("command: ")
+
+	if(tmp == 'Windows_info'):
+		Windows_info()
+	elif(tmp == 'Fonts'):
+		Fonts()
+	elif(tmp == 'Recent_Drawing'):
+		Recent_Drawing()
+	elif(tmp == 'Recent_Wordpad'):
+		Recent_Wordpad()
+	elif(tmp == 'Recent_Hwp'):
+		Recent_Hwp()
+	elif(tmp =='User_Profile_List'):
+		User_Profile_List()
+	elif(tmp == 'Recent_Office'):
+		Recent_Office()
+	elif(tmp == 'Recent_Login_User'):
+		Recent_Login_User()
+	elif(tmp == 'Public_Directory'):
+		Public_Directory()
+	elif(tmp == 'Recnet_Run'):
+		Recent_Run()
+	elif(tmp == 'Internet_Explorer_Config'):
+		Internet_Explorer_Config()
+	elif(tmp == 'Internet_Explorer_Search_Log'):
+		Internet_Explorer_Search_Log()
+	elif(tmp == 'Recent_Dialog'):
+		Recent_Dialog()
+
+
