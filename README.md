@@ -8,12 +8,12 @@ Registry_Forensic_Tool
 
 ## Functions
 
-### Windows_info
-	- OS_Name
-	- Root_Directory
-	- Install_Date
-	- ComputerName
-	- Last_ShutDown_Time
+	### Windows_info
+		- OS_Name
+		- Root_Directory
+		- Install_Date
+		- ComputerName
+		- Last_ShutDown_Time
 
 ### Recet_Drawing
 	Recent_Open_Drawing_Board_File
