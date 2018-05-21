@@ -194,14 +194,21 @@ def Recent_Dialog():
 	Sub_Key += "\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\LastVisitedPidlMRU"
 	Dialog_Key = OpenKey(HKEY_USERS, Sub_Key)
 	try:
-		cut = 0
+		cut = 1
+		Data_Name, Data_Value = [], []
 		while True:
 			name, value, type = EnumValue(Dialog_Key, cut)
-			value = value.decode('UTF-8')
-			print(name + ": " + str(value))
+			Data_Name.append(int(name))
+			Data_Value.append(value.decode('utf-16',errors="ignore").split("\x00")[0])
 			cut += 1
 	except WindowsError:
-		pass
+		i = 1
+		while True:
+			check = int(Data_Name.index(i-1))
+			print(str(Data_Name[check])+": "+str(Data_Value[check]))
+			i += 1
+			if i >= cut:
+				break
 
 def run():
 	command_check = ["Windows_info()", "Recent_Drawing()", "Recent_Wordpad()", "Recent_Hwp()", "User_Profile_List()", "Recent_Office()", "Recent_Login_User()", "Public_Directory()", "Recent_Run()", "Internet_Explorer_Config()", "Internet_Explorer_Search_Log()", "Recent_Dialog()", "Regedit_LastKey()" ]
