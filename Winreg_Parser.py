@@ -203,12 +203,14 @@ def Recent_Dialog():
 			cut += 1
 	except WindowsError:
 		i = 1
+		Data_Name.sort()
 		while True:
-			check = int(Data_Name.index(i-1))
-			print(str(Data_Name[check])+": "+str(Data_Value[check]))
+			print(str(Data_Name[i-1])+": "+str(Data_Value[i-1]))
 			i += 1
 			if i >= cut:
 				break
+			else:
+				pass
 
 def run():
 	command_check = ["Windows_info()", "Recent_Drawing()", "Recent_Wordpad()", "Recent_Hwp()", "User_Profile_List()", "Recent_Office()", "Recent_Login_User()", "Public_Directory()", "Recent_Run()", "Internet_Explorer_Config()", "Internet_Explorer_Search_Log()", "Recent_Dialog()", "Regedit_LastKey()" ]
