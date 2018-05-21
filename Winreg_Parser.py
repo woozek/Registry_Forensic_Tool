@@ -1,6 +1,12 @@
 import os
 import sys
+import struct
+from datetime import datetime, timedelta
 from winreg import *
+
+def Win_ts(timestamp):
+    WIN32_EPOCH = datetime(1601, 1, 1)
+    return WIN32_EPOCH + timedelta(microseconds=timestamp//10, hours=9)
 
 def Windows_User_Id():
 	cut = 0
@@ -26,7 +32,9 @@ def Windows_info():
     Wininfo_Key = OpenKey(HKEY_LOCAL_MACHINE,r"SYSTEM\\ControlSet001\\Control\\ComputerName\\ActiveComputerName")
     print ('ComputerName : ' + QueryValueEx(Wininfo_Key, 'ComputerName')[0])
     Wininfo_Key = OpenKey(HKEY_LOCAL_MACHINE,r"SYSTEM\\ControlSet001\\Control\\Windows")
-    print ('Last_ShutDown_Time : ' + str(QueryValueEx(Wininfo_Key, 'ShutdownTime')[0]))
+    Last_ShutDown_Time = QueryValueEx(Wininfo_Key, 'ShutdownTime')[0]
+    Last_ShutDown_Time = Win_ts(struct.unpack_from("<Q", Last_ShutDown_Time)[0]).strftime('%Y:%m:%d-%H:%M:%S.%f')
+    print (Last_ShutDown_Time)
 
 def Recent_Drawing():
 	Drawing_Key = OpenKey(HKEY_CURRENT_USER,r"Software\\Microsoft\\Windows\\CurrentVersion\\Applets\\Paint\\Recent File List")
@@ -56,7 +64,8 @@ def Recent_Hwp():
 		cut = 3
 		while True:
 			name, value, type = EnumValue(Hwp_Key, cut)
-			print (name + ': '+str(value))
+			value = value.decode('UTF-16')
+			print (name + ': '+ str(value))
 			cut += 2
 	except WindowsError:
 		pass
@@ -188,6 +197,7 @@ def Recent_Dialog():
 		cut = 0
 		while True:
 			name, value, type = EnumValue(Dialog_Key, cut)
+			value = value.decode('UTF-8')
 			print(name + ": " + str(value))
 			cut += 1
 	except WindowsError:
