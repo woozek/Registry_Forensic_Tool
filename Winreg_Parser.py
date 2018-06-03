@@ -1,5 +1,4 @@
 import os
-import sys
 import struct
 from datetime import datetime, timedelta
 from winreg import *
